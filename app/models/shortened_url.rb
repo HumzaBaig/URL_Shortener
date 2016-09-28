@@ -14,7 +14,7 @@ class ShortenedUrl < ActiveRecord::Base
     class_name: :Visit
 
   has_many :visitors,
-    through: :visits
+    through: :visits,
     source: :visitors
 
   def self.random_code
@@ -28,6 +28,6 @@ class ShortenedUrl < ActiveRecord::Base
   end
 
   def self.create_for_user_and_long_url!(user, long_url)
-    ShortenedUrl.create!({long_url: long_url, short_url: ShortenedUrl.random_code, user_id: user})
+    ShortenedUrl.create!({long_url: long_url, short_url: ShortenedUrl.random_code, user_id: user.id})
   end
 end
