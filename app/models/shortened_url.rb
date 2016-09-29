@@ -30,4 +30,20 @@ class ShortenedUrl < ActiveRecord::Base
   def self.create_for_user_and_long_url!(user, long_url)
     ShortenedUrl.create!({long_url: long_url, short_url: ShortenedUrl.random_code, user_id: user.id})
   end
+
+  def num_clicks
+    #slower
+    # arr = Visit.all.select{ |visit| visit.url_id == self.id }
+    # arr.count
+    # self.visits.count
+    Visit.select(:visitor_id).where(url_id: self.id).count
+  end
+
+  def num_uniques
+    Visit.select(:visitor_id).where(url_id: self.id).distinct.count
+  end
+
+  def num_recent_uniques
+    Visit.select(:visitor_id).where('url_id = ? AND created_at > ?', self.id, 10.minutes.ago).distinct.count
+  end
 end
